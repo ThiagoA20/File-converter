@@ -1,0 +1,117 @@
+#:import utils kivy.utils
+
+<Gerenciador>:  # Faz a transição entre telas
+    Screen:
+        name: 'screen'
+        canvas.before:
+            Color:
+                rgba: utils.get_color_from_hex('#25034B')
+            Rectangle:
+                pos: self.pos
+                size: self.size	
+        BoxLayout:
+            orientation: 'vertical'
+            padding: 100  # bordas
+            spacing: 30  # espaço entre os botões
+            Label:
+                text: 'Menu'
+            Button:
+                background_color: utils.get_color_from_hex('#CE9B0E')
+                text: 'Convert Files'
+                on_release: root.current = 'ConverterArquivos'
+            Button:
+                background_color: utils.get_color_from_hex('#CE9B0E')
+                text: 'Generate Report'
+                on_release: root.current = 'GerarRelatorio'
+    ConverterArquivos:
+        name: 'ConverterArquivos'
+        canvas.before:
+            Color:
+                rgba: utils.get_color_from_hex('#25034B')
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Button:
+            text: '<-'
+            on_release: root.current = 'screen'
+            pos_hint: {'x': 0, 'y': .95}
+            size_hint: .07, .06
+
+    GerarRelatorio:
+        name: 'GerarRelatorio'
+        canvas.before:
+            Color:
+                rgba: utils.get_color_from_hex('#25034B')
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Button:
+            text: '<-'
+            on_release: root.current = 'screen'
+            pos_hint: {'x': 0, 'y': .95}
+            size_hint: .07, .06
+
+<ConverterArquivos>:
+    FloatLayout:
+        Label:
+            text: '|----------Conversor----------|'
+            pos_hint: {"x": .45, "y": .75}
+            size_hint: (.1, .2)
+        Label:
+            text: 'Directory: '
+            pos_hint: {"x": .3, "y": .7}
+            size_hint: (.1, .05)
+        Button:
+            text: 'Search'
+            pos_hint: {"x": .7, "y": .7}
+            size_hint: (.1, .05)
+            on_release: root.relatorio()
+        Label:
+            text: 'From: '
+            pos_hint: {"x": .27, "y": .45}
+            size_hint: (.1, .2)
+        Label:
+            text: 'to: '
+            pos_hint: {"x": .49, "y": .45}
+            size_hint: (.1, .2)
+        Button:
+            text: 'Convert'
+            font_size: 15
+            on_release: root.convert()
+            pos_hint: {"x": .41, "y":.22}
+            size_hint: (.18, .08)
+
+    Spinner:
+        id: Files
+        size_hint: .15, .05
+        pos_hint: {'center': (.2, .72)}
+        text: 'File'
+        values: ['File', 'Directory', 'Subdirectory']
+
+    Spinner:
+        id: opentype
+        size_hint: .1, .05
+        pos_hint: {'center': (.42, .55)}
+        text: 'Pdf'
+        values: ['Pdf', 'Docx', 'Jpg', 'Png', 'Json', 'Csv']
+
+    Spinner:
+        id: closetype
+        size_hint: .1, .05
+        pos_hint: {'center': (.63, .55)}
+        text: 'Docx'
+        values: ['Pdf', 'Docx', 'Jpg', 'Png', 'Json', 'Csv']
+
+
+<GerarRelatorio>:
+    FloatLayout:
+        BotaoAmarelo:
+            text: 'Sign in'
+
+<BotaoAmarelo@ButtonBehavior+Label>:
+    canvas:
+        Color:
+            rgba: utils.get_color_from_hex('#CE9B0E')
+        Rectangle:
+            pos:self.pos
+            size:200,100
