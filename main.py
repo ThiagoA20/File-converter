@@ -30,7 +30,8 @@ class GerarRelatorio(Screen):
         Window.unbind(on_keyboard=voltar)  # Retira a função esc quando está no menu principal, assim quando for pressionado, o aplicativo fecha
 
 
-class ConverterArquivos(Screen):
+class ConverterArquivos(Screen): 
+
     def on_pre_enter(self):
         Window.bind(on_keyboard=voltar)
 
@@ -38,8 +39,9 @@ class ConverterArquivos(Screen):
         Window.unbind(on_keyboard=voltar)
 
     def relatorio(self):
-        global filelocal_ 
-        filelocal_ = filelocal()
+        global filelocal_
+        arquivos = self.ids.Files.text
+        filelocal_ = filelocal(arquivos)
 
     def convert(self):
         global filelocal_

@@ -1,4 +1,4 @@
-import glob
+#import glob
 #import win32com.client
 import os
 import img2pdf
@@ -15,45 +15,54 @@ def img_to_pdf(arq):
     with open(f"{str(arq)[0:-4]}.pdf", "wb") as f:
         f.write(img2pdf.convert(str(arq)))
 
-def Convert(filelocal, values):
-    path = Path(f"{filelocal.name}")
-    values = values
-    arquivos = values[0]
-    inpt = values[1]
+def Convert(filelocal, values): 
+    inpt = "." + values[1].lower()
     outpt = values[2]
 
-    if arquivos == "File":
-        if inpt == "Pdf" and outpt == "Docx":
-            print(f"Arquivo = {path}, input = {inpt}, output = {outpt}")
-        elif inpt == "Docx" and outpt == "Pdf":
-            print(f"Arquivo = {path}, input = {inpt}, output = {outpt}")
-        elif inpt == "Png" and outpt == "Pdf":
-            print(f"Arquivo = {path}, input = {inpt}, output = {outpt}")
-        elif inpt == "Jpg" and outpt == "Pdf":
-            print(f"Arquivo = {path}, input = {inpt}, output = {outpt}")
+    if values[0] == "File":
+        path = Path(f"{filelocal.name}")
+        if path.suffix == inpt:
+            try:
+                if inpt == ".pdf" and outpt == "Docx":
+                    print(".pdf --> .docx")
+                elif inpt == ".docx" and outpt == "Pdf":
+                    docx_to_pdf(path)
+                elif inpt == ".png" or inpt == ".jpg" and outpt == "Pdf":
+                    img_to_pdf(path)
+            except:
+                print("Erro!!!!!")
+        else:
+            print("Extensão de arquivo errada!")
 
-    elif arquivos == "Directory":
-        print("Directory")
+    elif values[0] == "Directory":
+        path = Path(f"{filelocal}")
+        print(f"Directory = {path}")
+        """
+        elif values[0] == "Directory":
+            for arq in path.glob('*'):
+                if arq.suffix == inpt:
+                    if inpt == "pdf" and outpt == "docx":
+                        pdf_to_docx(path)
+                    elif inpt == "docx" and outpt == "pdf":
+                        print(arq)
+                    elif inpt == "png" and outpt == "pdf":
+                        print(arq)
+                    elif inpt == "jpg" and outpt == "pdf":
+                        print(arq)
+        """
 
     else:
-        print("Subdirectory")
-
-    """
-    elif arquivos == "Directory":
-        for arq in path.glob('*'):
-            if arq.suffix == inpt:
-                if inpt == "pdf" and outpt == "docx":
-                    pdf_to_docx(path)
-                elif inpt == "docx" and outpt == "pdf":
-                    print(arq)
-                elif inpt == "png" and outpt == "pdf":
-                    print(arq)
-                elif inpt == "jpg" and outpt == "pdf":
-                    print(arq)
-    """
+        path = Path(f"{filelocal}")
+        print(f"Subdirectory = {path}")
 
 
-def filelocal():
+def filelocal(arquivos):
     Tk().withdraw()
-    localfile = askopenfile()
-    return localfile
+    if arquivos == "File":
+        localfile = askopenfile()
+        return localfile
+    elif arquivos == "Directory" or value == "Subdirectory":
+        localfile = askdirectory()
+        return localfile
+    else:
+        print("Erro!")
