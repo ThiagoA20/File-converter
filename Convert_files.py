@@ -1,68 +1,93 @@
-#import glob
+import glob
 #import win32com.client
 import os
 import img2pdf
+import shutil
 from tkinter import Tk
 from pathlib import Path
-from tkinter.filedialog import askdirectory, askopenfile
+from tkinter.filedialog import askdirectory, askopenfile, asksaveasfile
 from docx2pdf import convert
+from PIL import Image
+
+inpt = None
+outpt = None
+
+def pdf_to_docx(arq):
+    pass
 
 
 def docx_to_pdf(arq):
-    convert(f"{arq}")
+    pass
+
 
 def img_to_pdf(arq):
-    with open(f"{str(arq)[0:-4]}.pdf", "wb") as f:
-        f.write(img2pdf.convert(str(arq)))
+    save_file = str(askdirectory(initialdir="/home"))
+    for i in arq:
+        fullname = str(i)[0:-4] + '.pdf'
+        with open(fullname,"wb") as f:
+            f.write(img2pdf.convert(str(i)))
+        shutil.move(fullname, save_file)
 
-def Convert(filelocal, values): 
+
+def type_convert(arq):
+    global inpt
+    global outpt
+    list_files = []
+    for fil in arq:
+        if str(fil).endswith(str(inpt)):
+            list_files.append(fil)
+    if inpt == ".pdf" and outpt == "docx":
+        pdf_to_docx(list_files)
+    elif inpt == ".docx" and outpt == "pdf":
+        docx_to_pdf(list_files)
+    elif inpt == ".png" or inpt == ".jpg"  and outpt == "pdf":
+        img_to_pdf(list_files)
+
+
+def Convert(filelocal, values):
+    global inpt
+    global outpt
     inpt = "." + values[1].lower()
-    outpt = values[2]
+    outpt = values[2].lower()
+
+    if filelocal == None:
+        raise
 
     if values[0] == "File":
-        path = Path(f"{filelocal.name}")
-        if path.suffix == inpt:
-            try:
-                if inpt == ".pdf" and outpt == "Docx":
-                    print(".pdf --> .docx")
-                elif inpt == ".docx" and outpt == "Pdf":
-                    docx_to_pdf(path)
-                elif inpt == ".png" or inpt == ".jpg" and outpt == "Pdf":
-                    img_to_pdf(path)
-            except:
-                print("Erro!!!!!")
-        else:
-            print("Extensão de arquivo errada!")
+        path = [Path(f"{filelocal.name}")]
+        type_convert(path)
 
     elif values[0] == "Directory":
         path = Path(f"{filelocal}")
-        print(f"Directory = {path}")
-        """
-        elif values[0] == "Directory":
-            for arq in path.glob('*'):
-                if arq.suffix == inpt:
-                    if inpt == "pdf" and outpt == "docx":
-                        pdf_to_docx(path)
-                    elif inpt == "docx" and outpt == "pdf":
-                        print(arq)
-                    elif inpt == "png" and outpt == "pdf":
-                        print(arq)
-                    elif inpt == "jpg" and outpt == "pdf":
-                        print(arq)
-        """
+        fil = []
+        for arq in path.glob('*'):
+            fil.append(arq) 
+        type_convert(fil)
 
     else:
         path = Path(f"{filelocal}")
-        print(f"Subdirectory = {path}")
+        def getFiles(dirName):
+            listOfFile = os.listdir(dirName)
+            completeFileList = list()
+            for file in listOfFile:
+                completePath = os.path.join(dirName, file)
+                if os.path.isdir(completePath):
+                    completeFileList = completeFileList + getFiles(completePath)
+                else:
+                    completeFileList.append(completePath)
+            return completeFileList
+        fil = getFiles(path)
+        type_convert(fil)
 
 
 def filelocal(arquivos):
     Tk().withdraw()
-    if arquivos == "File":
-        localfile = askopenfile()
-        return localfile
-    elif arquivos == "Directory" or value == "Subdirectory":
-        localfile = askdirectory()
-        return localfile
-    else:
-        print("Erro!")
+    try:
+        if arquivos == "File":
+            localfile = askopenfile(initialdir="/home")
+            return localfile
+        elif arquivos == "Directory" or arquivos == "Subdirectory":
+            localfile = askdirectory(initialdir="/home")
+            return localfile
+    except:
+        print("Error while catching files path!")

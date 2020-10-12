@@ -8,6 +8,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.dropdown import DropDown
 
 filelocal_ = None
+savefile_ = None
 
 class Gerenciador(ScreenManager):  # Gerencia a troca de telas
     pass
@@ -45,11 +46,17 @@ class ConverterArquivos(Screen):
 
     def convert(self):
         global filelocal_
-        values = [self.ids.Files.text, self.ids.opentype.text, self.ids.closetype.text]
         try:
+            values = [self.ids.Files.text, self.ids.opentype.text, self.ids.closetype.text]
             Convert(filelocal_, values)
-        except AttributeError:
-            print('Selecione o Diretório')
+            filelocal_ = None
+        except:
+            if filelocal_ == None:
+                print("Selecione o Local dos arquivos")
+            """
+            elif savefile_ == None:
+                print("Selecione o Local para salvar os arquivos")
+            """
 
 class Bitworks(App):  # Herda da classe App de kivy.app para gerar o programa
     def build(self):
