@@ -10,11 +10,14 @@ from kivy.uix.dropdown import DropDown
 filelocal_ = None
 savefile_ = None
 
-class Gerenciador(ScreenManager):  # Gerencia a troca de telas
+
+"Manages the screen exchange"
+class Manager(ScreenManager):
     pass
 
 
-def voltar(window, key, *args):  # Retorna para o menu principal ao apertar esc, ou o botão voltar do android
+"returns to the main menu by pressing esc, or the android back button"
+def back(window, key, *args):
     if key == 27:
         App.get_running_app().root.current = 'screen'
         return True
@@ -23,27 +26,30 @@ def CustonDropDown(BoxLayout):
     pass
 
 
-class GerarRelatorio(Screen):
+class GenerateReport(Screen):
+    "sets the esc key as the back function, to return to the main menu"
     def on_pre_enter(self):
-        Window.bind(on_keyboard=voltar)  # Define a tecla esc como a função voltar, para retornar a tela anterior
+        Window.bind(on_keyboard=back)
+
+    "removes the function of returning to the main menu by pressing esc, so when pressed, closes the application"
+    def on_pre_leave(self):
+        Window.unbind(on_keyboard=back)
+
+
+class ConvertFiles(Screen): 
+    def on_pre_enter(self):
+        Window.bind(on_keyboard=back)
 
     def on_pre_leave(self):
-        Window.unbind(on_keyboard=voltar)  # Retira a função esc quando está no menu principal, assim quando for pressionado, o aplicativo fecha
+        Window.unbind(on_keyboard=back)
 
-
-class ConverterArquivos(Screen): 
-
-    def on_pre_enter(self):
-        Window.bind(on_keyboard=voltar)
-
-    def on_pre_leave(self):
-        Window.unbind(on_keyboard=voltar)
-
-    def relatorio(self):
+    "Catch how much files user wants to convert, from widgets.kv, then pass as a parameter to the filelocal function in Convert_files.py"
+    def report(self):
         global filelocal_
-        arquivos = self.ids.Files.text
+        arquivos = self.ids.Files.text  
         filelocal_ = filelocal(arquivos)
 
+    "send the parameters received from the user interface to the Convert function of Convert_files.py and check filelocal_, if none returns a message asking for the location, else  performs the conversion then set filelocal_ to none for a new user operation"
     def convert(self):
         global filelocal_
         try:
@@ -52,16 +58,19 @@ class ConverterArquivos(Screen):
             filelocal_ = None
         except:
             if filelocal_ == None:
-                print("Selecione o Local dos arquivos")
+                print("Select the File local!")
             """
             elif savefile_ == None:
-                print("Selecione o Local para salvar os arquivos")
+                print("Select the File local!")
             """
 
-class Bitworks(App):  # Herda da classe App de kivy.app para gerar o programa
+
+"inherits from the app class of kivy.app to generate the program"
+class Bitworks(App):
+    "opens the widgets.kv file where the user interface will be and uses utf-8 encoding to read accents"
     def build(self):
-        Builder.load_string(open("widgets.kv", encoding="utf-8").read(), rulesonly=True)  # Abre o arquivo widgets.kv onde estará a interface do usuário e utiliza o encoding utf-8 para ler acentos
-        return Gerenciador()
+        Builder.load_string(open("widgets.kv", encoding="utf-8").read(), rulesonly=True)
+        return Manager()
 
 if __name__ == '__main__':
     Bitworks().run()

@@ -1,6 +1,6 @@
 #:import utils kivy.utils
 
-<Gerenciador>:  # Faz a transição entre telas
+<Manager>:  # Do the screens transiton
     Screen:
         name: 'screen'
         canvas.before:
@@ -11,20 +11,20 @@
                 size: self.size	
         BoxLayout:
             orientation: 'vertical'
-            padding: 100  # bordas
-            spacing: 30  # espaço entre os botões
+            padding: 100  # margin
+            spacing: 30  # space between buttons
             Label:
                 text: 'Menu'
             Button:
                 background_color: utils.get_color_from_hex('#CE9B0E')
                 text: 'Convert Files'
-                on_release: root.current = 'ConverterArquivos'
+                on_release: root.current = 'ConvertFiles'
             Button:
                 background_color: utils.get_color_from_hex('#CE9B0E')
                 text: 'Generate Report'
-                on_release: root.current = 'GerarRelatorio'
-    ConverterArquivos:
-        name: 'ConverterArquivos'
+                on_release: root.current = 'GenerateReport'
+    ConvertFiles:
+        name: 'ConvertFiles'
         canvas.before:
             Color:
                 rgba: utils.get_color_from_hex('#25034B')
@@ -37,8 +37,8 @@
             pos_hint: {'x': 0, 'y': .95}
             size_hint: .07, .06
 
-    GerarRelatorio:
-        name: 'GerarRelatorio'
+    GenerateReport:
+        name: 'GenerateReport'
         canvas.before:
             Color:
                 rgba: utils.get_color_from_hex('#25034B')
@@ -51,7 +51,7 @@
             pos_hint: {'x': 0, 'y': .95}
             size_hint: .07, .06
 
-<ConverterArquivos>:
+<ConvertFiles>:  # Screen to convert files
     FloatLayout:
         Label:
             text: '|----------Conversor----------|'
@@ -65,7 +65,7 @@
             text: 'Search'
             pos_hint: {"x": .7, "y": .7}
             size_hint: (.1, .05)
-            on_release: root.relatorio()
+            on_release: root.report()
         Label:
             text: 'From: '
             pos_hint: {"x": .27, "y": .45}
@@ -103,10 +103,10 @@
         values: ['Pdf', 'Docx', 'Jpg', 'Png', 'Json', 'Csv']
 
 
-<GerarRelatorio>:
+<GenerateReport>:  # Screen to generate reports
     FloatLayout:
         BotaoAmarelo:
-            text: 'Sign in'
+            text: 'loading...'
 
 <BotaoAmarelo@ButtonBehavior+Label>:
     canvas:
