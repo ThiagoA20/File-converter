@@ -1,8 +1,9 @@
-import glob
 #import win32com.client
-import os
-import img2pdf
-import shutil
+import os, shutil, glob, subprocess
+import img2pdf, json
+import pandas as pd
+import pdfkit
+from prexview import Prexview
 from tkinter import Tk
 from pathlib import Path
 from tkinter.filedialog import askdirectory, askopenfile, asksaveasfile
@@ -14,23 +15,29 @@ inpt = None
 outpt = None
 
 "these functions before type_convert function will receive an list with posixpath of all files that will be converted, convert they, rename and move to a specifyed local by the user"
-def pdf_to_docx(arq):
-    pass
+def pdf_to_docx(arq): ###########
+    save_file = str(askdirectory(initialdir="/home"))
+    for i in arq:
+        fullname = str(i)[0:-4] + '.doc'
+        shutil.move(fullname, save_file)
 
-def pdf_to_png(arq):
-    pass
+def pdf_to_Json(arq): ###########
+    save_file = str(askdirectory(initialdir="/home"))
+    for i in arq:
+        fullname = str(i)[0:-4] + '.json'
+        shutil.move(fullname, save_file)
 
-def pdf_to_jpg(arq):
-    pass
+def pdf_to_Csv(arq): ############
+     save_file = str(askdirectory(initialdir="/home"))
+     for i in arq:
+         fullname = str(i)[0:-4] + '.csv'
+         shutil.move(fullname, save_file)
 
-def pdf_to_Json(arq):
-    pass
-
-def pdf_to_Csv(arq):
-    pass
-
-def docx_to_pdf(arq):
-    pass
+def docx_to_pdf(arq): ##########
+  save_file = str(askdirectory(initialdir="/home"))
+  for i in arq:
+      fullname = str(i)[0:-4] + '.pdf'
+      shutil.move(fullname, save_file)
 
 def img_to_pdf(arq):
     save_file = str(askdirectory(initialdir="/home"))
@@ -40,17 +47,53 @@ def img_to_pdf(arq):
             f.write(img2pdf.convert(str(i)))
         shutil.move(fullname, save_file)
 
-def json_to_pdf(arq):
-    pass
+def json_to_pdf(arq): ##########
+  save_file = str(askdirectory(initialdir="/home"))   
+  for i in arq:
+      fullname = str(i)[0:-4] + '.pdf'
+      pxv = Prexview()
+      options = {'design': 'custom-invoice', 'output': 'pdf'}
+      json_file = pd.read_json(str(i))
+      res = pxv.sendJSON(json_file, options)
+      with open(fullname, "wb") as f:
+          f.write(res['json_file'])
+      shutil.move(fullname, save_file)
 
-def csv_to_pdf(arq):
-    pass
+def csv_to_pdf(arq): ###########
+    save_file = str(askdirectory(initialdir="/home"))
+    for i in arq:
+        fullname = str(i)[0:-3] + 'pdf'
+        html_file = str(i)[0:-3] + 'html'
+        pdf_file = pd.read_csv(str(i), sep=',')
+        pdf_file.to_html(html_file)
+        print(f"fullname = {fullname}, html_file = {html_file}, pdf_file = {pdf_file}")
+        pdfkit.from_file(html_file, fullname)
+        shutil.move(fullname, save_file)
 
 def json_to_csv(arq):
-    pass
+    save_file = str(askdirectory(initialdir="/home"))
+    for i in arq:
+        fullname = str(i)[0:-5] + '.csv'
+        json_file = pd.read_json(str(i))
+        json_file.to_csv(fullname)
+        shutil.move(fullname, save_file)
 
-def csv_to_json(arq):
-    pass
+
+def csv_to_json(arq): 
+    save_file = str(askdirectory(initialdir="/home"))
+    for i in arq:
+        fullname = str(i)[0:-4] + '.json'
+        csv_file = pd.read_csv(str(i))
+        csv_file.to_json(fullname)
+        shutil.move(fullname, save_file)
+
+def csv_to_html(arq):
+    save_file = str(askdirectory(initialdir="/home"))
+    for i in arq:
+        fullname = str(i)[0:-4] + '.html'
+        csv_file = pd.read_csv(str(i))
+        csv_file.to_html(fullname)
+        shutil.move(fullname, save_file)
 
 "a type_convert function will identify the types of files with which the user will work, filter and put in a list only those files that end with the extension in the variable inpt, then it will pass this list to the respective function defined by the variables inpt and outpt"
 def type_convert(arq):
@@ -62,10 +105,6 @@ def type_convert(arq):
             list_files.append(fil)
     if inpt == ".pdf" and outpt == "docx":
         pdf_to_docx(list_files)
-    elif inpt == ".pdf" and outpt == "png":
-        pdf_to_png(list_files)
-    elif inpt == ".pdf" and outpt == "jpg":
-        pdf_to_jpg(list_files)
     elif inpt == ".pdf" and outpt == "json":
         pdf_to_json(list_files)
     elif inpt == ".pdf" and outpt == "csv":
@@ -82,6 +121,8 @@ def type_convert(arq):
         json_to_csv(list_files)
     elif inpt == ".csv" and outpt == "json":
         csv_to_json(list_files)
+    elif inpt == ".csv" and outpt == "html":
+        csv_to_html(list_files)
     else:
         print("invalid conversion!")
 
