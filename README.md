@@ -18,9 +18,9 @@ no, then select the respective directory where the files are and finally which a
 
 # Why
 
-i saw somme one on uptowork asking for a file conversor that can convert all files in a folder, actualy exists a lot of online conversors but to convert you need to put just some files, so, if you have a big amount of files to convert that will take a lot of time, so i decided to develop it. This project is part of my personal portifolio, so, i will be happy if you want to conttribute with some project structure or anything you can report that can make me a better developer!
+i saw somme one on uptowork asking for a file conversor that can convert all files in a folder, actualy exists a lot of online conversors but to convert you need to put just some files, so, if you have a big amount of files to convert that will take a lot of time, so i decided to develop it. This project is part of my personal portifolio, so, i will be happy if you could give me a feedback about project structure, code or anything you can report that can make me a better developer!
 
-Also, you can use this project for anything.
+Also, you can contribute and use this project for anything.
 
 ---
 
