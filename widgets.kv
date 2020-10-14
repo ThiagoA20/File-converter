@@ -19,10 +19,7 @@
                 background_color: utils.get_color_from_hex('#CE9B0E')
                 text: 'Convert Files'
                 on_release: root.current = 'ConvertFiles'
-            Button:
-                background_color: utils.get_color_from_hex('#CE9B0E')
-                text: 'Generate Report'
-                on_release: root.current = 'GenerateReport'
+       
     ConvertFiles:
         name: 'ConvertFiles'
         canvas.before:
@@ -37,19 +34,6 @@
             pos_hint: {'x': 0, 'y': .95}
             size_hint: .07, .06
 
-    GenerateReport:
-        name: 'GenerateReport'
-        canvas.before:
-            Color:
-                rgba: utils.get_color_from_hex('#25034B')
-            Rectangle:
-                pos: self.pos
-                size: self.size
-        Button:
-            text: '<-'
-            on_release: root.current = 'screen'
-            pos_hint: {'x': 0, 'y': .95}
-            size_hint: .07, .06
 
 <ConvertFiles>:  # Screen to convert files
     FloatLayout:
@@ -102,16 +86,3 @@
         text: 'Docx'
         values: ['Pdf', 'Docx', 'Jpg', 'Png', 'Json', 'Csv', 'Html']
 
-
-<GenerateReport>:  # Screen to generate reports
-    FloatLayout:
-        BotaoAmarelo:
-            text: 'loading...'
-
-<BotaoAmarelo@ButtonBehavior+Label>:
-    canvas:
-        Color:
-            rgba: utils.get_color_from_hex('#CE9B0E')
-        Rectangle:
-            pos:self.pos
-            size:200,100
