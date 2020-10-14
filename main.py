@@ -26,16 +26,6 @@ def CustonDropDown(BoxLayout):
     pass
 
 
-class GenerateReport(Screen):
-    "sets the esc key as the back function, to return to the main menu"
-    def on_pre_enter(self):
-        Window.bind(on_keyboard=back)
-
-    "removes the function of returning to the main menu by pressing esc, so when pressed, closes the application"
-    def on_pre_leave(self):
-        Window.unbind(on_keyboard=back)
-
-
 class ConvertFiles(Screen): 
     def on_pre_enter(self):
         Window.bind(on_keyboard=back)
